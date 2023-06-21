@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import User
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -32,3 +32,10 @@ def processadd(request):
         user = User.objects.create(user_email = email, user_fname = fname, user_lname = lname, user_position = position, user_image = user_pic)
         user.save()
         return HttpResponseRedirect('/users')
+    
+def detail(request, profile_id):
+    try:
+        user = User.objects.get(pk=profile_id)
+    except User.DoesNotExist:
+        raise Http404("Profile does not exist")
+    return render(request, 'users/detail.html', {'user': user})
