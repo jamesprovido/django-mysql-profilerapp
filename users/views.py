@@ -4,6 +4,8 @@ from .models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 def index(request):
@@ -56,7 +58,8 @@ def processadd(request):
         user = User.objects.create(user_email = email, user_fname = fname, user_lname = lname, user_position = position, user_image = user_pic)
         user.save()
         return HttpResponseRedirect('/users')
-    
+
+@login_required(login_url='/users/login')  
 def detail(request, profile_id):
     try:
         user = User.objects.get(pk=profile_id)
@@ -68,6 +71,8 @@ def delete(request, profile_id):
     User.objects.filter(id=profile_id).delete()
     return HttpResponseRedirect('/users')
 
+@login_required(login_url='/users/login') 
+@permission_required('users.change_user', login_url='/users/login') 
 def edit(request, profile_id):
     try:
         user = User.objects.get(pk=profile_id)
@@ -98,3 +103,23 @@ def processedit(request, profile_id):
             user_profile.user_image = profile_pic
         user_profile.save()
         return HttpResponseRedirect(reverse('users:detail', args=(profile_id,)))
+
+def loginview(request):
+    return render(request, 'users/login.html')
+
+def process(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return HttpResponseRedirect('/users')
+    else:
+        return render(request, 'users/login.html', {
+            'error_message' : "Login Failed"
+        })
+    
+def processlogout(request):
+    logout(request)
+    return HttpResponseRedirect('/users/login')
