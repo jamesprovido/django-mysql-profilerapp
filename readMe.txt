@@ -10,3 +10,6 @@ https://www.youtube.com/watch?v=C3-wRS6WEvY
 
 Python Django Lesson [TAGALOG] Part 4 ( Search and Pagination )
 https://www.youtube.com/watch?v=sjMtVgBubBc
+
+Python Django Lesson [TAGALOG] Part 5 ( Login, Authentication and Authorization)
+https://www.youtube.com/watch?v=pZpV0MNl61c

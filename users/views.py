@@ -1,13 +1,37 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import User
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 def index(request):
-    user_list = User.objects.order_by('-id')[:5]
-    context = {'user_list': user_list} 
-    return render(request, 'users/index.html', context)
+    # user_list = User.objects.order_by('-id')[:5]
+    user_list = User.objects.all().order_by('-id')
+    paginator = Paginator(user_list, 5)
+
+    page_number = request.GET.get('page')
+
+    # context = {'user_list': user_list} 
+    # return render(request, 'users/index.html', context)
+    user_list = paginator.get_page(page_number)
+
+    return render(request, 'users/index.html', {'page_obj': user_list})
+
+def search(request):
+    term = request.GET.get('search', '')
+    user_list = User.objects.filter(Q(user_fname__icontains=term) | Q(user_lname__icontains=term)).order_by('-id')
+
+    paginator = Paginator(user_list, 5)
+
+    page_number = request.GET.get('page')
+
+    # context = {'user_list': user_list} 
+    # return render(request, 'users/index.html', context)
+    user_list = paginator.get_page(page_number)
+
+    return render(request, 'users/index.html', {'page_obj': user_list})
 
 def add(request):
     return render(request, 'users/add.html')
