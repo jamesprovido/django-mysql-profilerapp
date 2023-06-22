@@ -13,3 +13,7 @@ https://www.youtube.com/watch?v=sjMtVgBubBc
 
 Python Django Lesson [TAGALOG] Part 5 ( Login, Authentication and Authorization)
 https://www.youtube.com/watch?v=pZpV0MNl61c
+	(add userdefault user in django admin views)
+
+Python Django Lesson [TAGALOG] Part 6 - Final ( Data relation , Adding Comment to User)
+https://www.youtube.com/watch?v=23A4B-I7FKA
