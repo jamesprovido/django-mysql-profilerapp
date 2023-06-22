@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'profiler.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'profilerapp',
-        'USERNAME': 'Administrator',
+        'NAME': 'profilerapp1',
+        'USERNAME': 'ODBC',
         'PASSWORD': '123456',
-        'PORT': 3306,
+        'PORT': '3306',
         'HOST': 'localhost'
     }
 }

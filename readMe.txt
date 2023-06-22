@@ -6,3 +6,7 @@ https://www.youtube.com/watch?v=HM-wpKxYLZw
 
 Python Django Lesson [TAGALOG] Part 3 (Details , Insert and Delete)
 https://www.youtube.com/watch?v=C3-wRS6WEvY
+	(created db=>profilerapp1 because of mysql issue)
+
+Python Django Lesson [TAGALOG] Part 4 ( Search and Pagination )
+https://www.youtube.com/watch?v=sjMtVgBubBc
