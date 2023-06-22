@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ user.user_fname }} {{ user.user_lname }}
+    {{ users.user_fname }} {{ users.user_lname }}
 {% endblock %}
 
 {% block content %}
@@ -12,22 +12,57 @@
         </p>
     {% endif %}
 
-    <div class="mb-5">
-        <h1> {{ user.user_fname }} {{ user.user_lname }} </h1>
-        <p class="text-muted">{{ user.user_email }}</p>
-        <p>Position: {{ user.user_position }}</p>
+    <div class="row">
 
-        <div class="img-responsive">
-            <img src="/users/media/{{ user.user_image }}" alt="profile_user" class="img-rounded" width="300">
+        <div class="col-lg-6">
+            <div class="mb-5">
+                <h1> {{ users.user_fname }} {{ users.user_lname }} </h1>
+                <p class="text-muted">{{ users.user_email }}</p>
+                <p>Position: {{ user.user_position }}</p>
+        
+                <div class="img-responsive">
+                    <img src="/users/media/{{ users.user_image }}" alt="profile_user" class="img-rounded" width="300">
+                </div>
+            </div>    
+        
+            <div class="btn-group mt-5">
+                {% if request.user.is_staff %}
+                    <a href="{% url 'users:delete' user.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    <a href="{% url 'users:edit' user.id %}" class="btn btn-sm btn-info">Edit</a>
+                {% endif %}
+                <a href="{% url 'users:index' %}" class="btn btn-sm btn-success">Return</a>
+            </div>
         </div>
-    </div>    
 
-    <div class="btn-group mt-5">
-        {% if request.user.is_staff %}
-            <a href="{% url 'users:delete' user.id %}" class="btn btn-sm btn-danger">Delete</a>
-            <a href="{% url 'users:edit' user.id %}" class="btn btn-sm btn-info">Edit</a>
-        {% endif %}
-        <a href="{% url 'users:index' %}" class="btn btn-sm btn-success">Return</a>
+        <div class="col-lg-6">
+            <h2>Comments</h2>
+            <p class="text-muted">Total of {{ comments_count }}</p>
+            {% if comments_count > 0 %}
+                {% for comment in comments %}
+                    {% if comment.active %}
+                    <p><strong>{{ comment.name }}</strong>: {{ comment.body }}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <hr>
+            <br>
+            <form action="{% url 'users:addcomment' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Comment</label>
+                    <textarea name="comment" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+                </div>
+                
+                <input type="hidden" name="user_id" id="user_id" value="{{ users.id }}">
+                <input type="hidden" name="name" id="name" value="{{ user.username }}">
+                <input type="hidden" name="email" id="email" value="{{ user.email }}">
+
+                <button type="submit" class="btn btn-sm btn-primary mt-3">Add Comment</button>
+            </form>
+        </div>
+
     </div>
+
+    
 
 {% endblock %}

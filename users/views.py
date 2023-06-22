@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from .models import User
+from .models import User, Comment
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -63,9 +63,21 @@ def processadd(request):
 def detail(request, profile_id):
     try:
         user = User.objects.get(pk=profile_id)
+        comments = Comment.objects.filter(user_id=profile_id)
+        comments_count = Comment.objects.filter(user_id=profile_id).count()
     except User.DoesNotExist:
         raise Http404("Profile does not exist")
-    return render(request, 'users/detail.html', {'user': user})
+    return render(request, 'users/detail.html', {'users': user, 'comments': comments, 'comments_count': comments_count})
+
+def addcomment(request):
+    comment_text = request.POST.get('comment')
+    user_id = request.POST.get('user_id')
+    name = request.POST.get('name')
+    email = request.POST.get('email')
+
+    comment = Comment.objects.create(user_id=user_id, body=comment_text, name=name, email=email)
+    comment.save()
+    return HttpResponseRedirect(reverse('users:detail', args=(user_id, )))
 
 def delete(request, profile_id):
     User.objects.filter(id=profile_id).delete()
@@ -123,3 +135,4 @@ def process(request):
 def processlogout(request):
     logout(request)
     return HttpResponseRedirect('/users/login')
+
